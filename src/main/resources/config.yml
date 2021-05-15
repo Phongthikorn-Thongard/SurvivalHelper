@@ -1,0 +1,32 @@
+#auto bring item in inventory to your hand
+AutoItemInAction:
+  ToolsBreak: true # When an tool is broken, it will automatically bring the same item in your inventory to your hand.
+  BlockPlace: true # When all the block in your hand are placed. It will automatically bring the same type of block to your hand.
+  ItemBlacklist: [] #Example [ "golden_pickaxe", "diamond_sword" ]
+
+#Show Location WorldTime and many more
+Hud:
+  Enable: true
+  Text: "&aXYZ: &f%PLAYERLOCX% %PLAYERLOCY% %PLAYERLOCZ% &a%LOOKDIRECTION% $TIMECOLOR$%HH%:%MM% $TIMECOLOR$[$TIMESYMBOL$]"
+  #Change color according to the daytime and nighttime
+  TimeColor:
+    DayTimeColor: "&6" #6 - 19 o'clock
+    NightTimeColor: "&7" #20 - 5 o'clock
+
+#Measure the length between the 2 selected blocks.
+Tape_measure:
+  Enable: true
+  Item: "compass"
+
+DetecteMobSpawn:
+  Enable: true
+  Item: "torch"
+
+# %PLAYERLOCX% : Player X coordinate.
+# %PLAYERLOCY% : Player y coordinate.
+# %PLAYERLOCZ% : Player Z coordinate.
+# %LOOKDIRECTONE% : Player looking direction
+# %HH% : WorldTIme hour
+# %MM% : WorldTime minute
+# $TIMECOLOR$ : Change color according to the daytime and nighttime
+# $TIMESYMBOL$ : Change symbols according to the time of day and night.

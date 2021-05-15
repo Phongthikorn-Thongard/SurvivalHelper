@@ -1,0 +1,10 @@
+name: SurvivalHelper
+version: ${project.version}
+main: com.skyblueplayer.survivalhelper.Main
+api-version: 1.16
+authors: [ Phongthikorn_Thongard ]
+description: This plugin will make the gameplay of survival more comfortable.
+commands:
+  svhelper:
+
+

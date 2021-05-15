@@ -8,10 +8,12 @@ import com.skyblueplayer.survivalhelper.Player.data.PlayerMeasureData;
 import com.skyblueplayer.survivalhelper.Player.runnable.LightDetectorRunnable;
 import com.skyblueplayer.survivalhelper.utils.animation.ToolEnableAnimation;
 import org.bukkit.ChatColor;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
@@ -27,7 +29,7 @@ public class EnableMDTSevent implements Listener {
     ToolsManager toolsManager = new ToolsManager();
     private long cooldown = 31L;
     private boolean cancelcooldown;
-
+    String detector_mob_spawn_item = plugin.getConfig().getString("DetecteMobSpawn.Item");
     public EnableMDTSevent(Main plugin) {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
@@ -71,7 +73,7 @@ public class EnableMDTSevent implements Listener {
                             toolAnimation.DisablingState(p, (int) cooldown / 5.00, "MobSpawnDetect");
                             if (cooldown <= 0) {
                                 playerMDSdata.setEnable(false);
-                                toolAnimation.MeasureState(p, ChatColor.GOLD + "Mob Spawn Detect" + ChatColor.RED + " is disabled.");
+                                toolAnimation.MeasureState(p, ChatColor.GOLD + "Mob Spawn Detector " + ChatColor.RED + " is disabled.");
                                 this.cancel();
                             }
                         }
@@ -113,5 +115,24 @@ public class EnableMDTSevent implements Listener {
                 }
             }
         }.runTaskLater(Main.getPlugin(Main.class), 1L);
+    }
+    @EventHandler(priority = EventPriority.LOW)
+    public void onPlaceBlock(BlockPlaceEvent e) {
+        Player p = e.getPlayer();
+        PlayerInventory inventory = p.getInventory();
+        playerMDSdata = plugin.playermdspdata.get(p.getUniqueId());
+        if (e.getBlock().getType().name().equals(detector_mob_spawn_item.toUpperCase())) {
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    if (!inventory.getItemInMainHand().getType().name().equals(plugin.getConfig().getString("DetecteMobSpawn.Item").toUpperCase())
+                            && !inventory.getItemInOffHand().getType().name().equals(plugin.getConfig().getString("DetecteMobSpawn.Item").toUpperCase())) {
+                        p.sendMessage(ChatColor.GOLD + "[Survival Helper] " + ChatColor.RED + "Mob Spawn Detector is disabled.");
+                        playerMDSdata.setEnable(false);
+                        p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_DIDGERIDOO, 10, 1);
+                    }
+                }
+            }.runTaskLater(Main.getPlugin(Main.class), 1L);
+        }
     }
 }

@@ -24,7 +24,7 @@ public class PlaceBlockEvent implements Listener {
         plugin.getServer().getPluginManager().registerEvents(this, (plugin));
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGH)
     public void onBlockPlaceEvent(BlockPlaceEvent e) {
 
         Player p = e.getPlayer();
@@ -48,7 +48,7 @@ public class PlaceBlockEvent implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGH)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerInteract(PlayerInteractEvent e) {
         interacthand = e.getHand();
     }

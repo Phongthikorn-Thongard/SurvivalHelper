@@ -7,10 +7,12 @@ import com.skyblueplayer.survivalhelper.Player.data.PlayerMDSdata;
 import com.skyblueplayer.survivalhelper.Player.data.PlayerMeasureData;
 import com.skyblueplayer.survivalhelper.utils.animation.ToolEnableAnimation;
 import org.bukkit.ChatColor;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
@@ -30,6 +32,7 @@ public class EnableTapeMeasureEvent implements Listener {
     ToolsManager toolsManager = new ToolsManager();
     private long cooldown = 31L;
     private boolean cancelcooldown;
+    String tape_measure_item = plugin.getConfig().getString("Tape_measure.Item");
     @EventHandler(priority = EventPriority.HIGH)
     public void onPlayerInteract(PlayerToggleSneakEvent e) {
         Player p = e.getPlayer();
@@ -41,7 +44,7 @@ public class EnableTapeMeasureEvent implements Listener {
             cancelcooldown = false;
         }
         if (plugin.getConfig().getBoolean("Tape_measure.Enable")) {
-            if (iteminhand.getType().name().equals(plugin.getConfig().getString("Tape_measure.Item").toUpperCase())
+            if (iteminhand.getType().name().equals(tape_measure_item.toUpperCase())
             ) {
                 new BukkitRunnable() {
                     @Override
@@ -106,5 +109,25 @@ public class EnableTapeMeasureEvent implements Listener {
                 }
             }
         }.runTaskLater(Main.getPlugin(Main.class), 1L);
+    }
+    @EventHandler(priority = EventPriority.LOW)
+    public void onPlaceBlock(BlockPlaceEvent e) {
+        Player p = e.getPlayer();
+        PlayerInventory inventory = p.getInventory();
+        playermetric = plugin.playermetric.get(p.getUniqueId());
+        if (e.getBlock().getType().name().equals(tape_measure_item.toUpperCase())) {
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    if (!inventory.getItemInMainHand().getType().name().equals(tape_measure_item.toUpperCase())
+                            && !inventory.getItemInOffHand().getType().name().equals(tape_measure_item.toUpperCase())) {
+                        p.sendMessage(ChatColor.GOLD + "[Survival Helper] " + ChatColor.RED + "Tape Measure is disabled.");
+                        playermetric.setEnableMeasureTape(false);
+                        playermetric.setSelectedIndex(1);
+                        p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_DIDGERIDOO, 10, 1);
+                    }
+                }
+            }.runTaskLater(Main.getPlugin(Main.class), 1L);
+        }
     }
 }

@@ -30,7 +30,7 @@ public final class Main extends JavaPlugin {
     public void onEnable() {
         // Plugin startup logic
         putHashmap();
-        Debugger.sendConsoleMessage("SURVIVAL HELPER");
+        Debugger.sendConsoleMessage("Thank you for using Survival Helper plugin!");
         this.getCommand("svhelper").setExecutor(new SvhelperCommand());
         this.getCommand("svhelper").setTabCompleter(new SvhelperTabCompletetion());
         InstanceEvent();
@@ -40,8 +40,7 @@ public final class Main extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        // Plugin shutdown logic
-        getLogger().info("NO WAY RUN");
+
     }
 
     public void InstanceEvent() {
